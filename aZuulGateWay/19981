@@ -1,0 +1,7 @@
+
+    zuul 网关请求，轮询机制自动负载，轮流下发请求
+    请求方式：
+        http://192.168.1.110:19981/eurekaClientServer/test/test?token=tokenget
+    对 eurekaClientServer 服务中的请求下发
+    在 网关下发之前 TokenFilter 对token进行验证，token可以放在header或者参数列表中
+

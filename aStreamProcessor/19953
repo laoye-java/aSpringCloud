@@ -1,0 +1,12 @@
+
+消息中转站 aStreamProcessor 服务
+    可以接收消息生产者（ aStreamProducers 服务）发送的消息，接收之后，再通过 kafka 将主题消息发送出去，
+        1：可以处理完消息之后发送到另一个消息消费者，
+        2：也可以发送到消息生产这作为发送和接收成功的响应
+    两种监听转发方式：
+        1：@ServiceActivator(inputChannel = MyProcessor.INPUT,//监听通道
+                outputChannel = MyProcessor.defaultProcessorOutput)//发送通道
+        2：@StreamListener(MyProcessor.INPUT)//监听通道
+           @SendTo(MyProcessor.myChannelProcessorOutput)//返回处理结果到output通道
+
+

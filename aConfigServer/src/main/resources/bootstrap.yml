@@ -1,0 +1,51 @@
+
+#注册中心地址
+register: 
+  host: 192.168.1.110
+  port: 19999
+
+# 本服务地址
+server:
+  host: 192.168.1.110  #本服务地址
+  port: 19991  #配置工程监听端口
+  
+# eureka注册中心配置
+eureka:
+  instance:
+     hostname: ${server.host}  #本服务地址，或者host映射主机名称 eurekaClient  #Eureka实例名，集群中根据这里相互识别
+     # 开启IP注册
+     preferIpAddress: true  #向eureka服务注册信息时，使用ip地址，默认使用的hostname注册
+     instance-id: ${spring.cloud.client.ipAddress}:${server.port}:${spring.application.name}
+     # 服务续约间隔时间
+     lease-renewal-interval-in-seconds: 5      # 心跳时间，即服务续约间隔时间（缺省为30s）
+     lease-expiration-duration-in-seconds: 10  # 发呆时间，即服务续约到期时间（缺省为90s）
+  client:
+    serviceUrl:
+      defaultZone: http://${register.host}:${register.port}/eureka/
+    healthcheck: 
+      enabled: true  ## 开启健康检查（需要spring-boot-starter-actuator依赖）
+
+
+      
+spring:
+  application:
+    name: configServer
+  #使用本地属性文件
+  profiles:
+    active: native         
+  #属性文件地址，只要指定文件夹的路径
+  cloud:
+    config:
+      label: master # 默认即为master
+      uri: http://${server.host}:${server.port} #本配置中心服务地址
+      server: 
+        native:
+#          searchLocations: classpath:/config/  #此路径无需配置权限放行
+          searchLocations: F:/cloud-config  #此路径需要配置权限放行
+          
+# 是否需要权限拉取，默认是true,如果不设置false就不允许你去拉取配置中心Server更新的内容,
+# 同时客户端服务无法执行/refresh接口刷新配置，
+# 此配置如果需要BUS消息总线的话，客户端和配置中心都需要配置；不加入BUS消息总线的话只需配置客户端
+management:
+  security:
+    enabled: false

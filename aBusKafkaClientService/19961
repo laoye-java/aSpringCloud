@@ -1,0 +1,37 @@
+
+kafka stream 消息驱动 实现BUS总线刷新配置文件
+
+过程中碰到的问题解决：
+
+一：使用/refresh单独刷新指定配置
+    1：调用/refresh出错。解决：
+        1.1：客户端必须配置 management.security.enabled.false
+        1.2：必须使用post请求，不支持get请求
+    2：调用/refresh后配置未生效。解决：
+        属性引用需要生效的位置加入注解 @RefreshScope ，此注解不能再 final class 上使用，否则报错
+
+二：使用kafka实现BUS总线刷新所有配置：
+    1：
+    2：kafka-2.12-2.0.0 版本包无法windows启动，linux未测试，使用2.11版本成功启动
+    3：调用/bus/refresh返回情况
+        3.1：调用配置中心 http://192.168.1.110:19971/bus/refresh 时，返回500错误，但配置刷新结果正常
+            {
+                "timestamp": 1539229231778,
+                "status": 500,
+                "error": "Internal Server Error",
+                "exception": "java.util.concurrent.RejectedExecutionException",
+                "message": "Task java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask@1a5d74ca rejected from java.util.concurrent.ScheduledThreadPoolExecutor@345ceda4[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 9]",
+                "path": "/bus/refresh"
+            }
+        3.2：调用客户端   http://192.168.1.110:19961/bus/refresh 时，没有返回，但配置刷新结果正常
+    4：指定刷新范围（此方案未测试，待定）
+        通过向服务实例请求Spring Cloud Bus的/bus/refresh接口，触发总线上其他服务实例的/refresh。
+        但是有些特殊场景下（比如：灰度发布），我们希望可以刷新微服务中某个具体实例的配置。
+        Spring Cloud Bus对这种场景也有很好的支持：
+            /bus/refresh接口还提供了destination参数，用来定位具体要刷新的应用程序。
+            比如，我们可以请求/bus/refresh?destination=服务名字:9000，
+            此时总线上的各应用实例会根据destination属性的值来判断是否为自己的实例名，
+            若符合才进行配置刷新，若不符合就忽略该消息。
+            destination参数除了可以定位具体的实例之外，还可以用来定位具体的服务。
+            定位服务的原理是通过使用Spring的PathMatecher（路径匹配）来实现，
+            比如：/bus/refresh?destination=customers:**，该请求会触发customers服务的所有实例进行刷新。

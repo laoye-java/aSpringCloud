@@ -1,0 +1,3 @@
+消息消费者 aStreamConsumers 服务
+    接收消息生产者（ aStreamProducers 服务）或者中转站（ aStreamProcessor 服务）发送的消息，
+    监听方式：@StreamListener(MyProcessor.INPUT)//监听通道

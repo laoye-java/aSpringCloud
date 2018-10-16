@@ -1,0 +1,45 @@
+#注册中心地址
+register:
+  host: 192.168.1.110
+  port: 19999
+
+
+server:
+  host: 192.168.1.110  #本服务地址
+  port: 19981 #端口号
+
+eureka:
+  instance:
+    hostname: ${server.host}  #本服务地址，或者host映射主机名称 eurekaClient  #Eureka实例名，集群中根据这里相互识别
+    # 开启IP注册
+    preferIpAddress: true  #向eureka服务注册信息时，使用ip地址，默认使用的hostname注册
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}:${spring.application.name}
+    # 服务续约间隔时间
+    lease-renewal-interval-in-seconds: 5      # 心跳时间，即服务续约间隔时间（缺省为30s）
+    lease-expiration-duration-in-seconds: 10  # 发呆时间，即服务续约到期时间（缺省为90s）
+  #客户端
+  client:
+    fetch-registry: true  #是否拉取服务列表，false只提供服务给别的服务。#设置是否从注册中心获取注册信息（缺省true）,这是一个单点的EurekaServer，不需要同步其它EurekaServer节点的数据，故设为false
+    register-with-eureka: true  #设置是否将自己作为客户端注册到注册中心（缺省true），这里为不需要 #是否开启注册服务，因为这里如果为true表示自己注册自己，而自己就是一个服务注册方，没必要自己注册自己
+    service-url:
+      defaultZone: http://${register.host}:${register.port}/eureka/  #注册中心地址
+
+spring:
+  application:
+    name: aZuulApiGateWay   #应用名称服务名
+  zipkin:
+      base-url: http://192.168.1.110:19941
+      enabled: true
+  #服务跟踪消息收集率，1代表每一条都收集，0.1代表收集百分之10，如果不配置，有个默认的百分比的
+  sleuth:
+    sampler:
+      percentage: 1  #（如果不配置默认0.1）
+
+zuul:
+  ignored-services:  #如果 ignored-services: *  表示所有的默认路由都失效了，要自己一个个配，没人会那么操蛋，除非遇到奇葩业务
+  routes:
+    eurekaClientServer: #标识你服务的名字，这里可以自己定义，一般方便和规范来讲还是跟自己服务的名字一样
+      path: /eurekaClientServer/**  #服务映射的路径，通过这路径就可以从外部访问你的服务了，目的是为了不爆露你机器的IP，面向服务的路由了，给你选一个可用的出来，#这里zuul是自动依赖hystrix，ribbon的，不是面向单机
+      serviceId: eurekaClientServer  #这里一定要是你Eureka注册中心的服务的名称，之所以这里配置serviceId因为跟eureka结合了，如果单独使用zuul,那么就必须写自己机器的IP了，
+      #如url:http://localhost:8080/  这样的不好就是写死IP了，万一这IP挂了，这高可用性，服务注册那套东西就用不起来了
+

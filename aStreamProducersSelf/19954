@@ -1,0 +1,17 @@
+
+自定义的消息生产者 aStreamProducers 服务 ， 通过 kafka 发送主题消息
+
+kafka 消息驱动问题
+    配置修改项
+    server.properties
+        listeners=PLAINTEXT://:9092    ----->   Kafka服务器允许客户端远程连接。必须配置，否则无法通过IP连接
+        advertised.listeners=PLAINTEXT://192.168.1.110:9092    ----->   Kafka服务器允许客户端远程连接。必须配置，否则无法通过IP连接
+        log.dirs=E:/logs/kafka/kafka-logs    ----->   日志存放地址配置
+        zookeeper.connect=192.168.1.110:2181    ----->   zookeeper地址配置
+    log4j.properties
+        log4j.appender.kafkaAppender.File=${kafka.logs.dir}/split-logs/server.log
+        log4j.appender.stateChangeAppender.File=${kafka.logs.dir}/split-logs/state-change.log
+        log4j.appender.requestAppender.File=${kafka.logs.dir}/split-logs/kafka-request.log
+        log4j.appender.cleanerAppender.File=${kafka.logs.dir}/split-logs/log-cleaner.log
+        log4j.appender.controllerAppender.File=${kafka.logs.dir}/split-logs/controller.log
+        log4j.appender.authorizerAppender.File=${kafka.logs.dir}/split-logs/kafka-authorizer.log

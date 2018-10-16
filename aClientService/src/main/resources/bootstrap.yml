@@ -1,0 +1,46 @@
+#注册中心地址
+register:
+  host: 192.168.1.110
+  port: 19999
+
+
+server:
+  host: 192.168.1.110  #本服务地址
+  port: 19971 #端口号
+
+eureka:
+  instance:
+    hostname: ${server.host}  #本服务地址，或者host映射主机名称 eurekaClient  #Eureka实例名，集群中根据这里相互识别
+    # 开启IP注册
+    preferIpAddress: true  #向eureka服务注册信息时，使用ip地址，默认使用的hostname注册
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}:${spring.application.name}
+    # 服务续约间隔时间
+    lease-renewal-interval-in-seconds: 5      # 心跳时间，即服务续约间隔时间（缺省为30s）
+    lease-expiration-duration-in-seconds: 10  # 发呆时间，即服务续约到期时间（缺省为90s）
+  #客户端
+  client:
+    fetch-registry: true  #是否拉取服务列表，false只提供服务给别的服务。#设置是否从注册中心获取注册信息（缺省true）,这是一个单点的EurekaServer，不需要同步其它EurekaServer节点的数据，故设为false
+    register-with-eureka: true  #设置是否将自己作为客户端注册到注册中心（缺省true），这里为不需要 #是否开启注册服务，因为这里如果为true表示自己注册自己，而自己就是一个服务注册方，没必要自己注册自己
+    service-url:
+      defaultZone: http://${register.host}:${register.port}/eureka/  #注册中心地址
+
+spring:
+  application:
+    name: eurekaClientServer   #应用名称服务名
+#指定配置中心服务的地址
+#指定属性文件名 ${spring.application.name}-${profile}.properties,是有命名规则的(要读取的配置文件profile属性,默认是dev)
+  cloud:
+    config:
+      discovery:
+        enabled: true  #是从配置中心读取文件
+        serviceId: configServer  #配置中心的servieId，即服务名，替代uri
+#      uri: http://localhost:10031  ##使用注册中心之后，此配置不在需要,由discovery配置取代
+      profile: dev-0.0.1  #读取配置文件的后缀版本号
+      label: master
+
+# 是否需要权限拉取，默认是true,如果不设置false就不允许你去拉取配置中心Server更新的内容,
+# 同时客户端服务无法执行/refresh接口刷新配置，
+# 此配置如果需要BUS消息总线的话，客户端和配置中心都需要配置；不加入BUS消息总线的话只需配置客户端
+management:
+  security:
+    enabled: false

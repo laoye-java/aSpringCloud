@@ -1,0 +1,5 @@
+
+       eurekaClientServer 服务
+       可以直接请求 http://192.168.1.110:19971/test/test
+       或者
+       通过 zuul 网关请求 http://192.168.1.110:19981/eurekaClientServer/test/test?token=tokenget

@@ -1,0 +1,42 @@
+#注册中心地址
+register:
+  host: 192.168.1.110
+  port: 19999
+
+server:
+  host: 192.168.1.110  #本服务地址
+  port: 19954 #端口号
+
+eureka:
+  instance:
+    hostname: ${server.host}  #本服务地址，或者host映射主机名称 eurekaClient  #Eureka实例名，集群中根据这里相互识别
+    # 开启IP注册
+    preferIpAddress: true  #向eureka服务注册信息时，使用ip地址，默认使用的hostname注册
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}:${spring.application.name}
+    # 服务续约间隔时间
+    lease-renewal-interval-in-seconds: 5      # 心跳时间，即服务续约间隔时间（缺省为30s）
+    lease-expiration-duration-in-seconds: 10  # 发呆时间，即服务续约到期时间（缺省为90s）
+  #客户端
+  client:
+    fetch-registry: true  #是否拉取服务列表，false只提供服务给别的服务。#设置是否从注册中心获取注册信息（缺省true）,这是一个单点的EurekaServer，不需要同步其它EurekaServer节点的数据，故设为false
+    register-with-eureka: true  #设置是否将自己作为客户端注册到注册中心（缺省true），这里为不需要 #是否开启注册服务，因为这里如果为true表示自己注册自己，而自己就是一个服务注册方，没必要自己注册自己
+    service-url:
+      defaultZone: http://${register.host}:${register.port}/eureka/  #注册中心地址
+
+spring:
+  application:
+    name: aStreamProducers   #应用名称服务名
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brockers: 192.168.1.110:9092   # Kafka的消息中间件服务器
+          zk-nodes: 192.168.1.110:2181   # Zookeeper的节点，如果集群，后面加,号分隔
+          auto-create-topics: true       # 如果设置为false,就不会自动创建Topic 有可能你Topic还没创建就直接调用了。
+      bindings:
+        output:                          # 这里用output表示发送，stream给我们提供的默认output，后面会讲到自定义output
+          destination: defaultStream     # 消息发往的目的地(接收者通过此标识匹配接收消息)
+          content-type: text/plain       # 消息发送的格式，接收端不用指定格式，但是发送端要
+        myChannelOutput:                 # 这里是自定义的output消息发送通道
+          destination: myChannelStream   # 消息发往的目的地(接收者通过此标识匹配接收消息)
+          content-type: text/plain       # 消息发送的格式，接收端不用指定格式，但是发送端要
