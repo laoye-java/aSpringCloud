@@ -1,5 +1,4 @@
 
-Git
 kafka stream 消息驱动 实现BUS总线刷新配置文件
 
 过程中碰到的问题解决：
