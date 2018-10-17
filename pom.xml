@@ -30,6 +30,7 @@
 		<module>aClientService</module>
 		<module>aConfigServer</module>
 		<module>aRegServer</module>
+		<module>aSleuthClientMQ</module>
 		<module>aSleuthClientService</module>
 		<module>aSleuthZipkinServer</module>
 		<module>aStreamConsumers</module>
