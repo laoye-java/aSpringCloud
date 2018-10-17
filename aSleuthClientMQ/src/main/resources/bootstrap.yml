@@ -26,7 +26,7 @@ eureka:
 
 spring:
   application:
-    name: eurekaClientServer   #应用名称服务名
+    name: sleuthZipkinClientMQ   #应用名称服务名
 #指定配置中心服务的地址
 #指定属性文件名 ${spring.application.name}-${profile}.properties,是有命名规则的(要读取的配置文件profile属性,默认是dev)
   cloud:
@@ -38,7 +38,7 @@ spring:
       profile: dev-0.0.1  #读取配置文件的后缀版本号
       label: master
   zipkin:
-    base-url: http://192.168.1.110:19941
+    base-url: http://192.168.1.110:19942
     enabled: true
   #服务跟踪消息收集率，1代表每一条都收集，0.1代表收集百分之10，如果不配置，有个默认的百分比的
   sleuth:
