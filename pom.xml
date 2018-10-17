@@ -52,8 +52,5 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-<!--
-Camden.SR7
--->
 
 </project>
