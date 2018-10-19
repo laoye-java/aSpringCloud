@@ -23,6 +23,44 @@ eureka:
     service-url:
       defaultZone: http://${register.host}:${register.port}/eureka/  #注册中心地址
 
+mysql:
+  hostIp: 192.168.1.110
+  port: 33068
+  dbName: zipkin
+  dbVer5_prop: zeroDateTimeBehavior=convertToNull&useSSL=false
+  # CONVERT_TO_NULL, EXCEPTION , ROUND
+  # ?useUnicode=true&serverTimezone=Hongkong&characterEncoding=utf8&zeroDateTimeBehavior=round
+  dbVer8_prop: zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=Hongkong
+  urlConfig: autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&${mysql.dbVer8_prop}
+  userName: root
+  password: 123456
+  driverClassName: com.mysql.cj.jdbc.Driver
+  driver-class-name: com.mysql.cj.jdbc.Driver
+
 spring:
   application:
-    name: aSleuthZipkinServerMQ   #应用名称服务名
+    name: aSleuthZipkinServerMQ  #应用名称服务名
+  #zipkin数据保存到数据库中需要进行如下配置
+  sleuth:
+    enabled: false  #表示当前程序不使用sleuth
+  #数据库脚本创建地址，当有多个是可使用[x]表示集合第几个元素
+  datasource:
+    schema[0]: classpath:/zipkin.sql
+#spring boot数据源配置
+    url: jdbc:mysql://${mysql.hostIp}:${mysql.port}/${mysql.dbName}?${mysql.urlConfig}
+    username: ${mysql.userName}
+    password: ${mysql.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver   # ${mysql.driver-class-name}
+    initialize: true
+    continue-on-error: true
+#rabbitmq配置
+  rabbitmq:
+    host: 192.168.1.110
+    port: 5672
+    username: liujf
+    password: liujf
+
+#表示zipkin数据存储方式是mysql
+zipkin:
+  storage:
+    type: mysql
