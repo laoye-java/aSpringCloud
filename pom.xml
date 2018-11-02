@@ -26,9 +26,10 @@
 	<url>http://maven.apache.org</url>
 
 	<modules>
-		<module>aConfigServer</module>
 		<module>aRegServer</module>
+		<module>aConfigServerRabbitMQ</module>
 <!--
+		<module>aConfigServer</module>
 		<module>aBusKafkaClientService</module>
 		<module>aClientService</module>
 		<module>aSleuthClientMQ</module>
