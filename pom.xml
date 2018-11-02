@@ -26,10 +26,11 @@
 	<url>http://maven.apache.org</url>
 
 	<modules>
-		<module>aBusKafkaClientService</module>
-		<module>aClientService</module>
 		<module>aConfigServer</module>
 		<module>aRegServer</module>
+<!--
+		<module>aBusKafkaClientService</module>
+		<module>aClientService</module>
 		<module>aSleuthClientMQ</module>
 		<module>aSleuthClientService</module>
 		<module>aSleuthZipkinServer</module>
@@ -39,7 +40,9 @@
 		<module>aStreamProducers</module>
 		<module>aStreamProducersSelf</module>
 		<module>aZuulGateWay</module>
+-->
 		<module>bClientService</module>
+
 	</modules>
 
 	<dependencyManagement>
