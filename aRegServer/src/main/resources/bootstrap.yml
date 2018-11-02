@@ -1,11 +1,11 @@
 #注册中心地址
 register:
-  host: 192.168.1.110
+  host: 192.168.124.110
   port: 19999
 
 
 server:
-  host: 192.168.1.110  #本服务地址
+  host: 192.168.124.110  #本服务地址
   port: ${register.port} #端口号
 
 spring:
