@@ -26,6 +26,7 @@ eureka:
       enabled: true  ## 开启健康检查（需要spring-boot-starter-actuator依赖）
 
 
+
       
 spring:
   application:
@@ -42,7 +43,13 @@ spring:
         native:
 #          searchLocations: classpath:/config/  #此路径无需配置权限放行
           searchLocations: F:/cloud-config  #此路径需要配置权限放行
-          
+  # 配置rabbitmq
+  rabbitmq:
+    host: 192.168.124.120  # rabbitmq的主机
+    port: 5672   # 访问端口
+    username: liujf  #安装RabbitMQ时配置的用户名
+    password: liujf  #安装RabbitMQ时配置的密码
+
 # 是否需要权限拉取，默认是true,如果不设置false就不允许你去拉取配置中心Server更新的内容,
 # 同时客户端服务无法执行/refresh接口刷新配置，
 # 此配置如果需要BUS消息总线的话，客户端和配置中心都需要配置；不加入BUS消息总线的话只需配置客户端
