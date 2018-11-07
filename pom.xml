@@ -41,8 +41,9 @@
 		<module>aStreamProducers</module>
 		<module>aStreamProducersSelf</module>
 		<module>aZuulGateWay</module>
--->
 		<module>bClientService</module>
+-->
+		<module>bClientServiceRabbitMQ</module>
 
 	</modules>
 

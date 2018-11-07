@@ -1,0 +1,9 @@
+
+    1 ： eurekaClientServer 服务
+    可以直接请求 http://192.168.1.110:19972/test/test
+    或者
+    通过 zuul 网关请求 http://192.168.1.110:19981/eurekaClientServer/test/test?token=tokenget
+
+    2 ： eurekaClientServer 服务 加入了 sleuth-zipkin 监控，
+    19972 接收的请求，都能在 http://192.168.1.110:19941 页面上查询链路详情
+
